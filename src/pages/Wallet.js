@@ -1,10 +1,11 @@
 import React from 'react';
-import store from '../redux/store';
+import Header from '../components/Header';
 
 class Wallet extends React.Component {
   render() {
-    console.log(store.getState().user.email);
-    return <div>TrybeWallet</div>;
+    return (
+      <Header />
+    );
   }
 }
 
