@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { deleteExpense } from '../redux/actions';
 
 class Table extends Component {
+  handleClick = ({ target }) => {
+    const { dispatch, expenses } = this.props;
+    const newExpenses = expenses.filter((exp) => exp.id !== Number(target.id));
+    dispatch(deleteExpense(newExpenses));
+  };
+
   render() {
     const { expenses } = this.props;
     return (
@@ -20,8 +27,8 @@ class Table extends Component {
           </tr>
         </thead>
         <tbody>
-          {expenses.map((exp, index) => (
-            <tr key={ index }>
+          {expenses.map((exp) => (
+            <tr key={ exp.id }>
               <td>{ exp.description }</td>
               <td>{ exp.tag }</td>
               <td>{ exp.method }</td>
@@ -38,6 +45,25 @@ class Table extends Component {
                 }
               </td>
               <td>{ exp.exchangeRates[exp.currency].name }</td>
+              <td>
+                <button
+                  type="button"
+                  data-testid="delete-btn"
+                  onClick={ this.handleClick }
+                  name="delete"
+                  id={ exp.id }
+                >
+                  Deletar
+                </button>
+                <button
+                  type="button"
+                  data-testid="edit-btn"
+                  onClick={ this.handleClick }
+                  name="edit"
+                >
+                  Editar
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
