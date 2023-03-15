@@ -1,4 +1,5 @@
-import { UPDATE_CURRENCIES, UPDATE_EXPENSES, DELETE_EXPENSE } from '../actions/index';
+import { UPDATE_CURRENCIES,
+  UPDATE_EXPENSES, DELETE_EXPENSE, EDIT_EXPENSE, EDITED_EXPENSE } from '../actions/index';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -8,6 +9,8 @@ const INITIAL_STATE = {
 };
 
 const wallet = (state = INITIAL_STATE, action) => {
+  const expenseList = state.expenses;
+  console.log(expenseList);
   switch (action.type) {
   case UPDATE_CURRENCIES:
     return {
@@ -24,6 +27,24 @@ const wallet = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       expenses: action.expense,
+    };
+  case EDIT_EXPENSE:
+    return {
+      ...state,
+      editor: true,
+      idToEdit: action.id,
+    };
+  case EDITED_EXPENSE:
+    expenseList[action.id].description = action.expense.description;
+    expenseList[action.id].value = action.expense.value;
+    expenseList[action.id].currency = action.expense.currency;
+    expenseList[action.id].tag = action.expense.tag;
+    expenseList[action.id].method = action.expense.method;
+    return {
+      ...state,
+      expenses: [...state.expenses],
+      editor: false,
+      idToEdit: 0,
     };
   default:
     return state;

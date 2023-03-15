@@ -2,6 +2,8 @@ export const UPDATE_EMAIL = 'UPDATE_EMAIL';
 export const UPDATE_CURRENCIES = 'UPDATE_CURRENCIES';
 export const UPDATE_EXPENSES = 'UPDATE_EXPENSES';
 export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+export const EDIT_EXPENSE = 'EDIT_EXPENSE';
+export const EDITED_EXPENSE = 'EDITED_EXPENSE';
 
 export const UpEmail = (state) => ({
   type: UPDATE_EMAIL,
@@ -16,6 +18,18 @@ export const UpCurrencies = (state) => ({
 export const deleteExpense = (state) => ({
   type: DELETE_EXPENSE,
   expense: state,
+});
+
+export const editExpense = (state) => ({
+  type: EDIT_EXPENSE,
+  expense: state,
+  id: state.id,
+});
+
+export const editedExpense = (state, id) => ({
+  type: EDITED_EXPENSE,
+  expense: state,
+  id,
 });
 
 const Upexpenses = ({ value, description, currency, method, tag }, exchangeRates) => ({
