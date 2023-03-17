@@ -4,6 +4,8 @@ import { renderWithRouterAndRedux } from './renderWith';
 import App from '../../App';
 
 const email = 'lucaslopesm_22@hotmail.com';
+const valor = 'value-input';
+const desc = 'description-input';
 
 describe('Testes: Página de Login.', () => {
   test('Deve existir o campo de email, senha e do botão de entrar', () => {
@@ -35,9 +37,9 @@ describe('Testes: Carteira', () => {
     renderWithRouterAndRedux(<App />, {
       initialEntries: ['/carteira'],
     });
-    expect(screen.getByTestId('value-input')).toBeInTheDocument();
+    expect(screen.getByTestId(valor)).toBeInTheDocument();
     expect(screen.getByTestId('currency-input')).toBeInTheDocument();
-    expect(screen.getByTestId('description-input')).toBeInTheDocument();
+    expect(screen.getByTestId(desc)).toBeInTheDocument();
     expect(screen.getByTestId('tag-input')).toBeInTheDocument();
     expect(screen.getByTestId('method-input')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Adicionar despesa/i })).toBeInTheDocument();
@@ -45,17 +47,29 @@ describe('Testes: Carteira', () => {
 });
 
 describe('Testes: Interação do usuário', () => {
-  test('Ao adicionar uma despesa, ela aparece na tela', async () => {
+  test('Ao adicionar uma despesa, ela aparece na tela, e os botões de editar e excluir aparecem e se comportam de forma correta', async () => {
     renderWithRouterAndRedux(<App />);
     userEvent.type(screen.getByRole('textbox', { name: /Email/i }), email);
     userEvent.type(screen.getByLabelText('Senha:'), '123456');
     userEvent.click(screen.getByRole('button', { name: /Entrar/i }));
-    userEvent.type(screen.getByTestId('value-input'), '300');
-    userEvent.type(screen.getByTestId('description-input'), 'Resident Evil 4 Remake');
+    userEvent.type(screen.getByTestId(valor), '300');
+    userEvent.type(screen.getByTestId(desc), 'Resident Evil 4 Remake');
     userEvent.click(screen.getByRole('button', { name: /Adicionar despesa/i }));
     await waitFor(() => {
-      expect(screen.getByTestId('delete-btn')).toBeInTheDocument();
-      expect(screen.getByTestId('edit-btn')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Deletar/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Editar/i })).toBeInTheDocument();
+    });
+    userEvent.click(screen.getByRole('button', { name: /Editar/i }));
+    expect(screen.getByRole('button', { name: /Editar despesa/i })).toBeInTheDocument();
+    userEvent.type(screen.getByTestId(valor), '320');
+    userEvent.click(screen.getByRole('button', { name: /Editar despesa/i }));
+    userEvent.type(screen.getByTestId(valor), '200');
+    userEvent.type(screen.getByTestId(desc), 'GOW Ragnarok');
+    userEvent.click(screen.getByRole('button', { name: /Adicionar despesa/i }));
+    userEvent.click(screen.getAllByRole('button', { name: /Deletar/i })[0]);
+    await waitFor(() => {
+      expect(screen.getAllByRole('button', { name: /Deletar/i })).toHaveLength(1);
+      expect(screen.getAllByRole('button', { name: /Editar/i })).toHaveLength(1);
     });
   });
 });
