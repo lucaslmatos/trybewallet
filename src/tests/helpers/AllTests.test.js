@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouterAndRedux } from './renderWith';
 import App from '../../App';
@@ -41,5 +41,21 @@ describe('Testes: Carteira', () => {
     expect(screen.getByTestId('tag-input')).toBeInTheDocument();
     expect(screen.getByTestId('method-input')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Adicionar despesa/i })).toBeInTheDocument();
+  });
+});
+
+describe('Testes: Interação do usuário', () => {
+  test('Ao adicionar uma despesa, ela aparece na tela', async () => {
+    renderWithRouterAndRedux(<App />);
+    userEvent.type(screen.getByRole('textbox', { name: /Email/i }), email);
+    userEvent.type(screen.getByLabelText('Senha:'), '123456');
+    userEvent.click(screen.getByRole('button', { name: /Entrar/i }));
+    userEvent.type(screen.getByTestId('value-input'), '300');
+    userEvent.type(screen.getByTestId('description-input'), 'Resident Evil 4 Remake');
+    userEvent.click(screen.getByRole('button', { name: /Adicionar despesa/i }));
+    await waitFor(() => {
+      expect(screen.getByTestId('delete-btn')).toBeInTheDocument();
+      expect(screen.getByTestId('edit-btn')).toBeInTheDocument();
+    });
   });
 });
