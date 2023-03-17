@@ -10,7 +10,6 @@ const INITIAL_STATE = {
 
 const wallet = (state = INITIAL_STATE, action) => {
   const expenseList = state.expenses;
-  console.log(expenseList);
   switch (action.type) {
   case UPDATE_CURRENCIES:
     return {
